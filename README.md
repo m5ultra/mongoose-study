@@ -5,7 +5,12 @@ mongoose学习
 ### 链接数据库
 ```
   const mongoose = require("mongoose")
-  mongoose.connect("mongodb://127.0.0.1:27017/users")
+  mongoose.connect("mongodb://127.0.0.1:27017/users", {useNewUrlParser: true}, function(err) {
+    if(err) {
+      console.log(err)
+    }
+    console.log('数据库连接成功!')
+  })
   // 如果数据库设置了密码
   mongoose.connect("mongodb://account:password@127.0.0.1:27017/users")
 ```
@@ -14,7 +19,7 @@ mongoose学习
   const UserSchema = mongoose.Schema({
     name: String,
     age: Number,
-    status: Number
+    status: {type: Number, default: 0}
   })
 ```
 
