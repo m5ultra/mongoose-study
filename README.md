@@ -70,3 +70,6 @@ mongoose学习
     console.log(doc)
  })
 ```
+
+# mongoose 默认参数 mongoose 模块化 mongoose性能疑问
+### mongoose 默认参数 新增数据的时候 如果不传入数据会使用默认配置的数据
