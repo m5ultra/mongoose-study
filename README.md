@@ -83,7 +83,7 @@ lowercase uppercase trim
     name: {type: String, trim: true},
     age: Number,
     status: {type: Number, default: 0},
-    // 自定义修饰符
+    // 自定义事件修饰符, 出来用户redirect字段
     redirect: {
       type: 'string',
       set(params) {
