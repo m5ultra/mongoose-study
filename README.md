@@ -54,5 +54,19 @@ mongoose学习
 
 ### 更新数据 Update
 ```
-  
+  User.updateOne({_id: ''}, 更新对象内容, function(err, doc) {
+     if(err) {
+      console.log(err)
+       return
+     }
+     console.log(doc)
+  })
+```
+
+### 删除数据 Delete
+```
+ User.deleteOne({}, function(err, doc) {
+    if(err) return;
+    console.log(doc)
+ })
 ```
