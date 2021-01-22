@@ -77,3 +77,11 @@ mongoose学习
 ```
 ### mongoose 预定义模式修饰符
 lowercase uppercase trim
+> trim 设置为true 对数据name 做去空格操作
+```
+  const UserSchema = mongoose.Schema({
+    name: {type: String, trim: true},
+    age: Number,
+    status: {type: Number, default: 0}
+  })
+```
