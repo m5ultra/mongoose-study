@@ -82,6 +82,17 @@ lowercase uppercase trim
   const UserSchema = mongoose.Schema({
     name: {type: String, trim: true},
     age: Number,
-    status: {type: Number, default: 0}
+    status: {type: Number, default: 0},
+    // 自定义修饰符
+    redirect: {
+      type: 'string',
+      set(params) {
+        if(!params)  return ''
+        if(params.indexOf('http://' !== 0 && 'https://' !== 0) {
+          return 'http://' + params
+        }
+        ruturn params
+      }
+    }
   })
 ```
