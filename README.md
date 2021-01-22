@@ -39,4 +39,15 @@ mongoose学习
 ```
 
 
-### 
+### 增加数据 Create
+> 通过实例化Model 调用Model的实例的save方法
+```
+  var u = new User({ name : '李四', age: 20, status: 1})
+  u.save(function(err) {
+    if(err) {
+      console.log(err)
+      return false;
+    }
+    cosnole.log('成功')
+  })
+```
