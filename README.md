@@ -96,3 +96,20 @@ lowercase uppercase trim
     }
   })
 ```
+
+### mongoose 索引 mongoose 内置CURD方法 扩展Mongoose Model 的静态方法和实力方法
+##### 设置索引
+```
+ new mongoose.Schema({
+    sn: {
+      type: Number,
+      //  唯一索引
+      unique: true
+    },
+    name: {
+      type: String,
+      // 普通索引
+      index: true
+    }
+ })
+```
