@@ -191,7 +191,6 @@ u.findBySn() //
   validite: function(params) {
     return true/ false // true代表验证通过 false代表验证失败
   }
-  
 ```
 
 ### mongoose中使用aggregate 聚合管道
