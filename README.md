@@ -210,3 +210,22 @@ mongodb 原始驱动聚合实现
     }
  ])
 ```
+
+```
+const OrderModel =  require('./model/order.js')
+ OrderModel.aggregate([
+    {
+      $lookup: {
+        from: 'order_item', // 关联的表
+        localField: "order_id", // order中关联order_item
+        foreignField: "order_id", // order_item中的id
+        as: "items"
+      }
+    },
+    {
+      $match: {"all_price": {$gte: 90}}
+    }
+ ], function(err, docs) {
+    console.log(docs)
+ })
+```
