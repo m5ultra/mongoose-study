@@ -178,3 +178,18 @@ let u = new UserModel({
 })
 u.findBySn() // 
 ```
+
+### 数据校验
+```
+  required: 字段比传入
+  max: 数据最大值
+  min: 最小值
+  enum: [1, 2, 3] // 传入值必须是数组中的值,
+  maxlength: 字符串最大长度
+  minlength: 字符串最小长度
+  match: /^sn(.*)/ // 符合正则规则
+  validite: function(params) {
+    return true/ false // true代表验证通过 false代表验证失败
+  }
+  
+```
