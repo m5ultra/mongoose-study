@@ -98,9 +98,9 @@ lowercase uppercase trim
 ```
 
 ### mongoose 索引 mongoose 内置CURD方法 扩展Mongoose Model 的静态方法和实力方法
+ new mongoose.Schema({
 ##### 设置索引
 ```
- new mongoose.Schema({
     sn: {
       type: Number,
       //  唯一索引
@@ -112,4 +112,36 @@ lowercase uppercase trim
       index: true
     }
  })
+```
+#### 扩展静态方法
+
+```
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
+const UserSchema = new Schema({
+  name: {type: String, require: true},
+  sn: {
+    type: String,
+    index: true
+  },
+  age: Number,
+  status: {
+    type: Number,
+    default: 1,
+    enum: [1, 2, 3]
+  }
+})
+// 增加新的静态方法
+UserSchema.static.findBySn = function(sn, cb) {
+  this.find({sn}, function(err, docs) {
+    cb(err, docs)
+  })
+}
+
+// 使用静态方法 ???封装为Promise不香吗???
+UserModel = mongoose.model('User', UserSchema, 'user')
+UserModel.findBySn('sncode', function(err, docs) {
+     if (err) return false;
+     console.log(docs);
+})
 ```
