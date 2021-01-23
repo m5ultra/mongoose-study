@@ -229,3 +229,87 @@ const OrderModel =  require('./model/order.js')
     console.log(docs)
  })
 ```
+### Mongoose: aggregate聚合 $group使用说明
+> aggregate聚合是通过管道操作实现的。聚合管道里的每一步输出，都会作为下一步的输入，每一步在输入文档执行完操作后生成输出文档。
+#### 聚合管道：
+```
+ $project 修改输入文档的结构。可以用来重命名、增加或删除域，也可以用于创建计算结果以及嵌套文档。对应project()方法 
+
+ $match 用于过滤数据，只输出符合条件的文档。$match使用MongoDB的标准查询操作。对应match()。 
+
+ $limit 用来限制MongoDB聚合管道返回的文档数。对应limit()方法 
+
+ $skip 在聚合管道中跳过指定数量的文档，并返回余下的文档。对应skip()。 
+
+ $unwind 将文档中的某一个数组类型字段拆分成多条，每条包含数组中的一个值。对应unwind()方法 
+
+ $group 将集合中的文档分组，可用于统计结果。对应group()方法 
+
+ $sort 将输入文档排序后输出。对应sort()方法 
+
+ $geoNear 输出接近某一地理位置的有序文档。对应near()。 
+```
+#### $group表达式说明： 
+```
+$sum  计算总和 
+
+ $avg  计算平均值  
+
+ $min  获取每一组集合中所有文档对应值得最小值 
+
+ $max  获取每一组集合中所有文档对应值得最大值 
+
+ $push  在结果文档中插入值到一个数组中 
+
+ $addToSet  在结果文档中插入值到一个数组中，但不创建副本 
+
+ $first  根据资源文档的排序获取第一个文档数据
+
+ $last  根据资源文档的排序获取最后一个文档数据 
+```
+
+#### 举例说明aggregate聚合 $group使用
+> 商品属性：_id,  createTime,  nowPriceL,  nowPriceH,  number 统计每一天内店铺商品的最低价和最高价，平均最低价
+> 执行完$match管道后，得到的查询结果会输入到$project管道，执行完$project管道，得到的结果格式为{day,nowPriceL,nowPriceH},把这个结果输入$group管道，$group管道执行完毕，输出的结果输入到$sort管道，$sort执行完毕，输出最终结果集
+
+```
+Goods.aggregate([
+      {
+        $match: {
+          number: {$gte:100} //匹配number>=100的记录
+       }
+      },
+      {
+         $project : {
+             day : {$substr: [{"$add":["$createTime", 28800000]}, 0, 10] },//时区数据校正，8小时换算成毫秒数为8*60*60*1000=288000后分割成YYYY-MM-DD日期格式便于分组
+             "nowPriceL": 1, //设置原有nowPriceL为1，表示结果显示原有字段nowPriceL
+             "nowPriceH":1, //设置原有nowPriceH为1，表示结果显示原有字段nowPriceH
+             avgNowPriceL:{$toDouble:"$nowPriceL"},//把最低价转换为小数
+             avgNowPriceH:{$toDouble:"$nowPriceH"},//把最高价转换为小数
+             "dayNumber":1 //每组内有多少个成员
+         },
+      },
+    
+    { 
+      $group: { 
+        _id:"$day", //按照$day进行分组（一组为1天） 
+        nowPriceL:{$min: "$nowPriceL"}, //查找组内最小的nowPriceL 
+        nowPriceH:{$max: "$nowPriceH"}, //查找组内最大的nowPriceH  
+        avgNowPriceL:{$avg:"$avgNowPriceL"},//统计每一天内店铺商品的平均最低价
+        avgNowPriceH:{$avg:"$avgNowPriceH"},//统计每一天内店铺商品的平均最高价
+        dayNumber:{$sum:1}   
+      } 
+    }, 
+    { 
+      $sort: {
+        nowPriceL: 1//执行完 $group，得到的结果集按照nowPriceL升序排列
+      }
+    }]).exec(function (err, goods){
+    //返回结果  
+    console.log(goods);
+    });
+```
+#####注意：
+> mongoodb存储的数据是按照世界时间存储的，因此进行分割操作时需要对时间进行时区校正，使用$add加上时区差8小时(毫秒数)才能得到正确的数据
+`$substr: [ <string>, <start>, <length> ] }`
+https://docs.mongodb.com/manual/reference/operator/aggregation/toDouble/#exp._S_toDouble
