@@ -313,3 +313,9 @@ Goods.aggregate([
 > mongoodb存储的数据是按照世界时间存储的，因此进行分割操作时需要对时间进行时区校正，使用$add加上时区差8小时(毫秒数)才能得到正确的数据
 `$substr: [ <string>, <start>, <length> ] }`
 https://docs.mongodb.com/manual/reference/operator/aggregation/toDouble/#exp._S_toDouble
+
+### mongodbd导入导出数据
+```
+mongodump -h dbhost -d dbname -o dbdirectory
+mongorestore -h dbhost -d dbanme <path>
+```
