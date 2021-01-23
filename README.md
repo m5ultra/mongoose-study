@@ -145,3 +145,36 @@ UserModel.findBySn('sncode', function(err, docs) {
      console.log(docs);
 })
 ```
+
+#### 扩展实例方法
+```
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
+const UserSchema = new Schema({
+  name: {type: String, require: true},
+  sn: {
+    type: String,
+    index: true
+  },
+  age: Number,
+  status: {
+    type: Number,
+    default: 1,
+    enum: [1, 2, 3]
+  }
+})
+// 增加新的静态方法
+UserSchema.methods.findBySn = function(sn, cb) {
+  this.find({sn}, function(err, docs) {
+    cb(err, docs)
+  })
+}
+
+// 使用实例方法 ???封装为Promise不香吗???
+UserModel = mongoose.model('User', UserSchema, 'user')
+let u = new UserModel({
+  name: '...',
+  ...
+})
+u.findBySn() // 
+```
